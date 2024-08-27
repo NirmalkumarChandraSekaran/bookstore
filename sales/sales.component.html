@@ -1,0 +1,272 @@
+<div class="card">
+    <div class="flex mb-5 gap-2 justify-content-end">
+       
+    </div>
+    <p-steps [activeIndex]="active" [model]="items" />
+
+    <div [ngSwitch]="active">
+        <div *ngSwitchCase="0">
+            
+
+            <form action="" [formGroup]="searchCustomer" id="search">
+               
+                
+                <div style="display: flex; flex-direction: column;">
+                    <label for="searchname">SearchName</label>
+                    <input id="searchname" type="text"  pInputText formControlName="searchname" />
+                    <span *ngIf="searchNameerror" style="    margin-top: 0px;
+                margin-left: 0px;
+                color: red;" >{{searchNameerror}}</span>
+                </div>
+                <p-button label="Submit" (click)="loadfunction()" [disabled]="searchCustomer.invalid" />
+                
+            </form>
+            <p-button label="Next" class="bottom-button"  (click)="next()" [disabled]="next12 || customeravailable"  />
+
+            <p class="table" style="color: red;" *ngIf="!customeravailable && !next12">Your are a new customer please click next to continue </p>
+            <!-- <table border="1" class="table" *ngIf="customeravailable">
+                <thead>
+                    <td style="width: 25%; text-align: center;">CustomerName</td>
+                    <td style="width: 25%; text-align: center;">Customeremail</td>
+                    <td style="width: 25%; text-align: center;">CustomerPhoneNumber</td>
+                    <td style="width: 25%; text-align: center;">View</td>
+                </thead>
+                <tbody *ngFor="let data of customerarray;let i=index">
+                    <tr>
+                    <td style="width: 25%; text-align: center;">{{data.customername}}</td>
+                    <td style="width: 25%; text-align: center;">{{data.customeremail}}</td>
+                    <td style="width: 25%; text-align: center;">{{data.customerPhoneNumber}}</td>
+                    <td style="width: 25%; text-align: center;"><button style="background-color: blue; padding:15px; border-radius: 9px;"  (click)="view()">View</button></td>
+                    </tr>
+                </tbody>
+            </table> -->
+            <p-table 
+            *ngIf="customeravailable"
+            [value]="customerarray" 
+            styleClass="p-datatable-gridlines" 
+            [tableStyle]="{ 'margin-top':'20rem','min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>CustomerName</th>
+                        <th>CustomerEmail</th>
+                        <th>CustomerPhoneNumber</th>
+                        <th>View</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customerarray>
+                    <tr>
+                    <td>{{customerarray.customername}}</td>
+                    <td>{{customerarray.customeremail}}</td>
+                    <td>{{customerarray.customerPhoneNumber}}</td>
+                    <td><p-button label="View" (click)="view()" /></td>
+                    
+                    </tr>
+                </ng-template>
+        </p-table>
+        </div>
+        <div *ngSwitchCase="1">
+          
+     <div class="card" style="margin-top: 50px;">
+       <div class="flex flex-column md:flex-row gap-5">
+        <div class="flex-auto">
+            <p-scrollPanel [style]="{ width: '100%', height: '50vh' }" styleClass="custombar1">
+                <form action="" [formGroup]="Customerregister" class="content2">
+                    <span class="inputfields">
+                        <label for="CustomerName">Customer Name: </label>
+                      
+                            <input id="CustomerName" type="text" pInputText formControlName="CustomerName" />
+                    </span>
+                   <span *ngIf="customerNameerror" style="    margin-top: -40px;
+                   margin-left: 31px;
+                   color: red;">{{customerNameerror}}</span> 
+                   <span *ngIf="Customerregister.errors?.['minlength']">the minlength id {{Customerregister.errors?.['minilength']}}</span>
+                    <span class="inputfields">
+                        <label for="CustomerEmail">Customer Email:</label>
+                        <input id="CustomerEmail" type="email" pInputText formControlName="CustomerEmail" />
+                    </span>
+                    <span *ngIf="customeremailerror" style="    margin-top: -40px;
+                   margin-left: 31px;
+                   color: red;">{{customeremailerror}}</span>
+                    <span class="inputfields">
+                        <label for="CustomerPhoneNumber">Customer PhNO:</label>
+                        <p-inputMask 
+                        id="CustomerPhoneNumber"
+                        mask="99-9999999999" placeholder="91-9999999999"
+    formControlName="CustomerPhoneNumber"
+ />
+                    </span>
+                    <span *ngIf="phonenumbererror" style="    margin-top: -40px;
+                   margin-left: 31px;
+                   color: red;">{{phonenumbererror}}</span>
+                   </form>
+            </p-scrollPanel>
+        </div>
+        <div class="flex-auto">
+            <p-scrollPanel [style]="{ width: '100%', height: '50vh' }" styleClass="custombar2">
+                <form [formGroup]="Customerregister" class="content2"  >
+                    <div formArrayName="address" class="content2" >
+                        <div *ngFor="let address1 of address.controls;let i=index"  >
+                            
+                            <div [formGroupName]="i" >
+                                <label for="address">Address:{{i+1}}</label>
+                               
+                                    <input id="address" type="text" pInputText formControlName="address" />
+                                   
+                         
+
+                            <p-button *ngIf="!i" type="button" (click)="Addnewrow()" icon="pi pi-plus" rounded="true" outlined="true"    [style]="{'width':'30px','height':'30px','margin-left':'20px','margin-bottom':'10px','background-color':'blue','color':'white'}"></p-button>
+                            <p-button *ngIf="i" type="button" (click)=" removeaddress(i)" icon="pi pi-minus" rounded="true" outlined="true"      [style]="{'width':'30px','height':'30px','margin-left':'20px','margin-bottom':'10px','background-color':'blue','color':'white'}"></p-button>
+                           
+                        </div>
+                        <span style=" color: red; margin-left: 75px;">{{Addresserror[i]}}</span>
+                        </div>
+                        
+                        
+                    </div>
+
+                    <div class="inputfields">
+                        <label style="margin-left:-51px;" for="zip-code">Zip code</label>
+                        <input id="zip-code" type="text" pInputText formControlName="zipcode" />
+                        
+                    </div>
+                    <span *ngIf="zipcodeerror" style="    margin-top: -40px;
+                    margin-left: 31px;
+                    color: red;">{{zipcodeerror}}</span>
+                </form>
+        
+            </p-scrollPanel>
+        </div>
+    </div>
+</div>
+           <p-button label="Next" class="bottom-button" (click)="next()" (click)="newregister()"  [disabled]="Customerregister.invalid" />
+           <p-button label="Previous" class="previous-button" (click)="pre()" />
+        </div>
+        <div *ngSwitchCase="2">
+            
+            <form action="" [formGroup]="Booksearch"  class="content2" style="margin-top: 20px; align-items: flex-start;">
+                <span class="inputfields">
+                    <label for="bookname" style="width: 100px;">Title</label>
+                    <input id="bookname" type="text" pInputText formControlName="BookName"  />
+                </span>
+                <span class="inputfields">
+                    <label for="Bookpublisher" style="width: 100px;">Publisher</label>
+                    <input id="Bookpublisher"type="text" pInputText formControlName="Bookpublisher"/>
+                </span>
+              
+              <span class="inputfields">
+                <label for="BookAuthorName" style="width: 100px;">Author</label>
+                <input id="BookAuthorName" type="text" pInputText formControlName="BookAuthorName" />
+              </span>
+            
+               </form>
+               <p-button label="Search"  [style]="{'position':'absolute','top':'50%','left':'35%'}" (click)="searchfunction1()" />
+               <p *ngIf="searchbookbutton" Style="color: red;" >Please enter any one of the field  for search and to go next step</p>
+            
+
+          <div>
+            <div *ngIf="customeravailable" style="margin-left: -100px;">
+                <p-button label="previous" class="previous-button"  (click)="next1()"  />
+              </div>
+            <div *ngIf="!customeravailable" style="margin-left: -100px;">
+                <p-button label="Previous" class="previous-button" (click)="pre()" />
+              </div>
+            <p-button label="Next" class="bottom-button" [disabled]="searchbookbutton"  (click)="next()"  />
+          </div>
+        <p-table 
+        *ngIf="customerselected.length"
+        [value]="customerselected" 
+        styleClass="p-datatable-gridlines" 
+        [tableStyle]="{ 'margin-top':'2rem','min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Bookid</th>
+                    <th>Title</th>
+                    <th>SellingPrice</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customerselected>
+                <tr>
+                <td>{{customerselected.id}}</td>
+                <td>{{customerselected.title}}</td>
+                <td>{{customerselected.sellingPrice}}</td>
+                <td><p-button label="select" (click)="select(customerselected.id)" /></td>
+                
+                </tr>
+            </ng-template>
+    </p-table>
+   </div>         
+ 
+        <div *ngSwitchCase="3">
+
+            <div class="card" *ngIf="customerbrought.length" >
+                <p-table
+                   [value]="customerbrought"
+                   [paginator]="true"
+                   [rows]="5"
+                   [first]="first"
+                   [showCurrentPageReport]="true"
+                   [totalRecords]="customerbrought.length"
+                   [tableStyle]="{ 'min-width': '50rem' }"
+                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                   (onPage)="pageChange($event)"
+                   [rowsPerPageOptions]="[5,10, 25, 50]"
+               >
+                   <ng-template pTemplate="header">
+                     <tr style="background-color: #ebe9f5;height:3rem;">
+                       <th >BooksId</th>
+                       <th>Title</th>
+                       <th >Rate</th>
+                       <th >Action</th>
+                       <th >quantity</th>
+                       <th >Amount</th>
+                   </tr>
+                   </ng-template>
+                   <ng-template   pTemplate="body" let-customerbrought>
+                     <tr >
+                         <td>{{ customerbrought.id }}</td>
+                         <td>{{ customerbrought.title}}</td>
+                         <td>{{ customerbrought.sellingPrice }}</td>
+                         <td>
+                           <tr><td> <button id="button" (click)="adddata1(customerbrought.id)"><i class="fa fa-plus"></i></button></td>
+                             <td><button id="button"  (click)="delete(customerbrought.id)"> <i class="fa fa-minus"></i></button></td>
+                           </tr>
+                         </td>
+                         <td>{{customerbrought.quantity}}</td>
+                         <td>{{ customerbrought.amount}}</td>
+                         
+                     </tr>
+                 </ng-template>
+                   <ng-template pTemplate="paginatorleft">
+                       <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" />
+                   </ng-template>
+                   <ng-template pTemplate="paginatorright">
+                       <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text" />
+                   </ng-template>
+               </p-table>
+           </div>
+            <p-button label="Previous" class="previous-button" (click)="pre()" />
+            <p-button label="Finish" class="bottom-button" (click)="Finish()" />
+
+
+            <p style="margin-left: 75%;
+ font-size: 30px;
+">GrandTotal: Rs <span>{{Grandtotal}}</span> </p>
+
+<p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible1" [style]="{ width: '25rem' }">
+    <div class="flex align-items-center gap-3 mb-3">
+     Your bill has being successfully generated and Thanks you
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">  
+        All the bill details also will be send to your email and phone Number click save to complete the process 
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancel" severity="secondary" (onClick)="visible1 = false" />
+        <p-button label="Save" (click)="complete()" />
+    </div>
+</p-dialog>
+        </div>
+
+
+    </div>
+</div>

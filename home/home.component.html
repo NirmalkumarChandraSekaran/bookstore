@@ -1,0 +1,10 @@
+
+
+<div class="grid">
+    <app-left-nav (onToggleSideNav)="onToggleSideNav($event)" ></app-left-nav>
+    <div [ngClass]="getBodyByclass()" class="body"    >
+        <app-header></app-header>
+        <router-outlet></router-outlet>
+    </div>
+</div>
+

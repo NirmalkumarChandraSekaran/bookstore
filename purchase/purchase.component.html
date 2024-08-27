@@ -1,0 +1,239 @@
+<div class="card">
+    <div class="flex mb-5 gap-2 justify-content-end">
+    </div>
+    <p-steps class="responsive-steps"  [activeIndex]="active" [model]="items" />
+
+    <div [ngSwitch]="active">
+        <div *ngSwitchCase="0">
+           
+
+            <form action="" [formGroup]="searchvendor" id="search">
+               
+                
+                <div style="display: flex; flex-direction: column;">
+                    <input type="text" pInputText formControlName="searchname" />
+                    <span *ngIf="searchnameerror" style="    margin-top: 0px;
+                margin-left: 0px;
+                color: red;" >{{searchnameerror}}</span>
+                </div>
+                <p-button label="Submit" (click)="loadfunction()" [disabled]="searchvendor.invalid" />
+                
+            </form>
+            <p-button class="bottom-button" label="Next" (click)="next()" [disabled]="next12 || vendoravailable" />
+            <p class="table" style="color: red;" *ngIf="!vendoravailable && !next12">Your are a new vendor please click next to continue </p>
+            <p-table 
+            *ngIf="vendoravailable"
+            [value]="vendorlist" 
+            styleClass="p-datatable-gridlines" 
+            [tableStyle]="{ 'margin-top':'20rem','min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>VendorName</th>
+                        <th>Vendoremail</th>
+                        <th>VendorPhoneNumber</th>
+                        <th>View</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-vendorlist>
+                    <tr>
+                    <td>{{vendorlist.vendorname}}</td>
+                    <td>{{vendorlist.vendoremail}}</td>
+                    <td>{{vendorlist.vendorPhoneNumber}}</td>
+                    <td><p-button label="View" (click)="view()" /></td>
+                    
+                    </tr>
+                </ng-template>
+        </p-table>
+      </div>
+        <div *ngSwitchCase="1">
+             <div class="card" style="margin-top: 50px;">
+                <div class="flex flex-column md:flex-row gap-5">
+                 <div class="flex-auto">
+                     <p-scrollPanel [style]="{ width: '100%', height: '50vh' }" styleClass="custombar1">
+                         <form action="" [formGroup]="Vendorregister" class="content2">
+                             <span class="inputfields">
+                                 <label for="vendorName">Vendor Name: </label>
+                               
+                                     <input id="vendorName" type="text" pInputText formControlName="vendorName" />
+                             </span>
+                            <span *ngIf="vendornameerror" style="    margin-top: -40px;
+                            margin-left: 31px;
+                            color: red;">{{vendornameerror}}</span> 
+
+                             <span class="inputfields">
+                                 <label for="vendoremail">Vendor Email:</label>
+                                 <input id="vendoremail" type="email" pInputText formControlName="vendoremail" />
+                             </span>
+                             <span *ngIf="vendoremailerror" style="    margin-top: -40px;
+                            margin-left: 31px;
+                            color: red;">{{vendoremailerror}}</span>
+                             <span class="inputfields">
+                                 <label for="vendorphonenumber">Vendor PhNO: </label>
+                                 <p-inputMask 
+                                 id="vendorphonenumber"
+                                 mask="99-9999999999" placeholder="91-9999999999"
+             formControlName="vendorphonenumber"
+          />
+                             </span>
+                     <span *ngIf="vendorphoneerror" style="    margin-top: -40px;
+                            margin-left: 31px;
+                            color: red;">{{vendorphoneerror}}</span>
+                            </form>
+                     </p-scrollPanel>
+                 </div>
+                 <div class="flex-auto">
+                     <p-scrollPanel [style]="{ width: '100%', height: '50vh' }" styleClass="custombar2">
+                         <form [formGroup]="Vendorregister" class="content2"  >
+                             <div formArrayName="address" class="content2" >
+                                 <div *ngFor="let address1 of address.controls;let i=index"  >
+                                     
+                                     <div [formGroupName]="i" >
+                                         <label for="address">Address:{{i+1}}</label>
+                                        
+                                             <input id="address" type="text" pInputText formControlName="address" />
+                                            
+                                  
+         
+                                     <p-button *ngIf="!i" type="button" (click)="Addnewrow()" icon="pi pi-plus" rounded="true" outlined="true"    [style]="{'width':'30px','height':'30px','margin-left':'20px','margin-bottom':'10px','background-color':'blue','color':'white'}"></p-button>
+                                     <p-button *ngIf="i" type="button" (click)=" removeaddress(i)" icon="pi pi-minus" rounded="true" outlined="true"      [style]="{'width':'30px','height':'30px','margin-left':'20px','margin-bottom':'10px','background-color':'blue','color':'white'}"></p-button>
+                                    
+                                 </div>
+                                 <span *ngIf="addresserror" style=" color: red; margin-left: 75px;">{{addresserror[i]}}</span>
+                                 </div>
+                                 
+                                 
+                             </div>
+         
+                             <div class="inputfields">
+                                 <label style="margin-left:-51px;" for="zip-code">Zip code</label>
+                                 <input id="zip-code" type="text" pInputText formControlName="zipcode" />
+                                 
+                             </div>
+                             <span *ngIf="zipcodeerror" style="    margin-top: -40px;
+                             margin-left: 31px;
+                             color: red;">{{zipcodeerror}}</span>
+                         </form>
+                 
+                     </p-scrollPanel>
+                 </div>
+             </div>
+         </div>
+          
+           <p-button label="Next" class="bottom-button" (click)="next()" (click)="newregister()" [disabled]="Vendorregister.invalid" />
+           <p-button label="Previous" class="previous-button" (click)="pre()" />
+        </div>
+        <div *ngSwitchCase="2">
+         <app-bookstore (update2)="update($event)" (difference)="difference($event)" ></app-bookstore>
+               <p-button class="addbook" (onClick)="showDialog()" label="Add new book" />
+               <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '40rem',height:'30rem'  }">
+                <form action="" [formGroup]="Booksearch"  class="content2" style="margin-top: 20px; align-items: flex-start;">
+                    <div class="flex align-items-center gap-3 mb-3">
+                        <span class="inputfields">
+                            <label for="bookname" style="width: 100px;">Title</label>
+                            <input id="bookname" type="text" pInputText formControlName="BookName"  />
+                        </span>
+                        <span *ngIf="booktitleerror" style="    margin-top: -40px;
+                        margin-left: 31px;
+                        color: red;">{{booktitleerror}}</span>
+                       </div>
+                       <div class="flex align-items-center gap-3 mb-3">
+                        <span class="inputfields">
+                            <label for="Bookpublisher" style="width: 100px;">Publisher</label>
+                            <input id="Bookpublisher"type="text" pInputText formControlName="Bookpublisher"/>
+                        </span>
+                        <span *ngIf="bookpublishererror" style="    margin-top: -40px;
+                        margin-left: 31px;
+                        color: red;">{{bookpublishererror}}</span>
+                       </div>
+                       <div class="flex align-items-center gap-3 mb-3">
+                        <span class="inputfields">
+                            <label for="BookAuthorName" style="width: 100px;">Author</label>
+                            <input id="BookAuthorName" type="text" pInputText formControlName="BookAuthorName" />
+                          </span>
+                          <span *ngIf="bookauthorerror" style="    margin-top: -40px;
+                          margin-left: 31px;
+                          color: red;">{{bookauthorerror}}</span>
+                    </div>
+                    <div class="flex align-items-center gap-3 mb-3">
+                        <label for="sellingPrice" class="font-semibold w-6rem">Selling price</label>
+                        <input pInputText id="sellingPrice" class="flex-auto" autocomplete="off" formControlName="sellingPrice" />
+                        <span *ngIf="sellingpriceerror" style="    margin-top: -40px;
+                        margin-left: 31px;
+                        color: red;">{{sellingpriceerror}}</span>
+                    </div>
+                    <div class="flex align-items-center gap-3 mb-3">
+                        <label for="inventory" class="font-semibold w-6rem">Inventory</label>
+                        <input pInputText id="inventory" class="flex-auto" autocomplete="off" formControlName="inventory" />
+                        <span *ngIf="inventoryerror" style="    margin-top: -40px;
+                        margin-left: 31px;
+                        color: red;">{{inventoryerror}}</span>
+                    </div>
+                    
+                   </form>
+                   
+                   <div class="flex justify-content-end gap-2">
+                       <p-button label="Cancel" severity="secondary" (onClick)="visible = false" />
+                       <p-button label="Save" (click)="addbook()" [disabled]="Booksearch.invalid" />
+                   </div>
+               </p-dialog>
+            
+               <div *ngIf="vendoravailable">
+                <p-button label="previous" class="previous-button1"  (click)="next1()"  />
+
+            </div>
+          <div >
+            <p-button label="Next" class="bottom-button1"   (click)="next()"  />
+        
+          </div >
+          <div *ngIf="!vendoravailable">
+            <p-button label="Previous" class="previous-button1" (click)="pre()" />
+          </div>
+          
+        </div>
+
+        <div *ngSwitchCase="3">
+            <p-button label="Previous" class="previous-button" (click)="pre()" />
+            <p-button (click)="Finish()" class="bottom-button" label="Finish" />
+            <p-table 
+    [value]="purchaseditems" 
+    styleClass="p-datatable-gridlines" 
+    [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>bookid</th>
+                <th>Title</th>
+                <th>SellingPrice</th>
+                <th>Inventory</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-purchaseditems>
+            <tr>
+                <td>{{ purchaseditems.id }}</td>
+                <td>{{ purchaseditems.title }}</td>
+                <td>{{ purchaseditems.sellingPrice }}</td>
+                <td>{{ purchaseditems.inventory }}</td>
+            </tr>
+        </ng-template>
+</p-table>
+            <p style="margin-left: 75%;
+            font-size: 30px;
+           ">GrandTotal: Rs <span>{{Grandtotal}}</span> </p> 
+        </div>
+
+
+        
+        <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible1" [style]="{ width: '25rem' }">
+            <div class="flex align-items-center gap-3 mb-3">
+             Your bill has being successfully generated and Thanks you
+            </div>
+            <div class="flex align-items-center gap-3 mb-5">  
+                All the bill details also will be send to your email and phone Number click save to complete the process 
+            </div>
+            <div class="flex justify-content-end gap-2">
+                <p-button label="Cancel" severity="secondary" (onClick)="visible1 = false" />
+                <p-button label="Save" (click)="complete()" />
+            </div>
+        </p-dialog>
+
+    </div>
+</div>
